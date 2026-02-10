@@ -25,6 +25,11 @@ func main(){
 	mux.HandleFunc("/", controller.HelloHandler)
 	mux.HandleFunc("/frontend", controller.LoadTemplate)
 
+	// Product Routes
+	mux.HandleFunc("/add-product", controller.AddProduct)	// Post Product
+	mux.HandleFunc("/product/{id}", controller.GetOneProduct)	// Get One Product
+	
+	fmt.Println("Server is running on port " + port)
 	if err := http.ListenAndServe(":"+port, mux); err != nil {
 		fmt.Println("Server failed to start:", err)
 	}

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/GemaSatya/E-Commerce/auth"
 	"github.com/GemaSatya/E-Commerce/controller"
 	"github.com/GemaSatya/E-Commerce/model"
 	"github.com/joho/godotenv"
@@ -24,6 +25,9 @@ func main(){
 
 	mux.HandleFunc("/", controller.HelloHandler)
 	mux.HandleFunc("/frontend", controller.LoadTemplate)
+
+	// Auth Routes
+	mux.HandleFunc("/register", auth.RegisterUser)	// Register User
 
 	// Product Routes
 	mux.HandleFunc("/add-product", controller.AddProduct)	// Post Product

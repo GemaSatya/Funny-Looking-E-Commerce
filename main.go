@@ -28,6 +28,7 @@ func main(){
 
 	// Auth Routes
 	mux.HandleFunc("/register", auth.RegisterUser)	// Register User
+	mux.HandleFunc("/login", auth.LoginUser)			// Login User
 
 	// Product Routes
 	mux.HandleFunc("/add-product", controller.AddProduct)	// Post Product

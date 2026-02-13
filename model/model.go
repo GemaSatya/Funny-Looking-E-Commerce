@@ -14,6 +14,7 @@ type User struct {
 	Username string
 	Email    string
 	Password string
+	Login Login `gorm:"foreignKey:SessionId;constraint:OnDelete:CASCADE"`
 }
 
 type Cart struct {
@@ -42,4 +43,11 @@ type Order struct {
 type Category struct {
 	gorm.Model
 	Name string
+}
+
+type Login struct{
+	HashedPassword string
+	SessionToken   string
+	CSRFToken string
+	SessionId uint
 }

@@ -1,11 +1,366 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Home — Toko Online</title>
+    <style>
+      :root {
+        --accent: #0ea5a4;
+        --muted: #6b7280;
+        --card-bg: #ffffff;
+        --glass: rgba(255, 255, 255, 0.6);
+      }
+      * {
+        box-sizing: border-box;
+        font-family:
+          Inter,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+      }
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+        color: #0f1724;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 28px;
+        background: transparent;
+      }
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #06b6d4, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+      }
+      .brand h1 {
+        font-size: 18px;
+        margin: 0;
+      }
+      .search {
+        max-width: 520px;
+        flex: 1;
+        margin: 0 24px;
+      }
+      .search input {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #e6edf3;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(2, 6, 23, 0.04);
+      }
+      main {
+        padding: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .hero {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 18px;
+      }
+      .hero h2 {
+        margin: 0;
+        font-size: 22px;
+      }
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 18px;
+      }
+      .card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.12s ease;
+      }
+      .card:focus {
+        outline: 3px solid rgba(14, 165, 164, 0.16);
+      }
+      .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 30px rgba(2, 6, 23, 0.08);
+      }
+      .card-body {
+        padding: 16px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .card-body h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+      }
+      .price {
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .desc {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.3;
+        flex: 1;
+      }
+      .card-actions {
+        display: flex;
+        gap: 8px;
+        padding: 12px;
+        border-top: 1px solid #f1f5f9;
+      }
+      .btn {
+        background: var(--accent);
+        color: #fff;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .btn.ghost {
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid #e6edf3;
+      }
+      .add-to-cart {
+        background: #111827;
+      }
+      .meta {
+        color: #9ca3af;
+        font-size: 13px;
+      }
+      .empty {
+        padding: 40px;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #fff, #fbfdff);
+        text-align: center;
+        color: var(--muted);
+        box-shadow: 0 6px 18px rgba(2, 6, 23, 0.03);
+      }
+      @media (max-width: 640px) {
+        .hero {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .search {
+          order: 3;
+          width: 100%;
+          margin: 10px 0;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Welcome to the Frontend</h1>
+    <header>
+      <div class="brand">
+        <div class="logo">TK</div>
+        <div>
+          <h1 style="font-size: 14px; margin: 0">TokoKu</h1>
+          <div style="font-size: 12px; color: #6b7280">
+            Belanja mudah — demo
+          </div>
+        </div>
+      </div>
+      <div class="search" role="search">
+        <input
+          id="searchInput"
+          placeholder="Cari produk, mis. 'sepatu', 'kaos'..."
+        />
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center">
+        <button class="btn ghost">Masuk</button>
+        <button class="btn">Keranjang</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <h2>Semua Produk</h2>
+          <div class="meta">
+            Klik sebuah produk untuk melihat detail. Tombol "Tambah ke
+            Keranjang" disiapkan (fungsi menyusul).
+          </div>
+        </div>
+        <div class="meta">Total: <span id="totalCount">—</span> produk</div>
+      </section>
+
+      <section id="productsSection">
+        <div id="productsGrid" class="products-grid" aria-live="polite">
+          <!-- product cards will be injected here -->
+        </div>
+        <div
+          id="emptyState"
+          class="empty"
+          style="display: none; margin-top: 18px"
+        >
+          Belum ada produk untuk ditampilkan.
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Server-injected products (disediakan oleh controller.LoadTemplate)
+      window.__SERVER_PRODUCTS__ = {{ .ProductsJSON }};
+      // Helper: escape HTML to avoid XSS when rendering server data
+      function escapeHtml(str) {
+        if (!str) return "";
+        return String(str).replace(
+          /[&<>"']/g,
+          (s) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[s],
+        );
+      }
+      function formatPrice(n) {
+        if (n == null) return "-";
+        try {
+          return Number(n).toLocaleString("id-ID", {
+            maximumFractionDigits: 0,
+          });
+        } catch (e) {
+          return n;
+        }
+      }
+
+      const productsGrid = document.getElementById("productsGrid");
+      const emptyState = document.getElementById("emptyState");
+      const totalCount = document.getElementById("totalCount");
+      const searchInput = document.getElementById("searchInput");
+
+      // Try fetching product list from backend; fall back to demo data if not available.
+      async function loadProducts() {
+        let products = [];
+
+        // Prefer server-injected data (rendered by backend). If server returns an empty
+        // array the UI will display the empty state.
+        if (Array.isArray(window.__SERVER_PRODUCTS__)) {
+          products = window.__SERVER_PRODUCTS__;
+          renderProducts(products);
+          return;
+        }
+
+        try {
+          const res = await fetch("/products"); // backend may implement this later
+          if (!res.ok) throw new Error("no-list");
+          const data = await res.json();
+          if (Array.isArray(data) && data.length) products = data;
+        } catch (err) {
+          // fallback demo products so UI is usable now
+          products = [
+            {
+              ID: 1,
+              Name: "Kaos Polos - Hitam",
+              Description: "Kaos katun lembut, cocok untuk sehari-hari.",
+              Price: 120000
+            },
+            {
+              ID: 2,
+              Name: "Sepatu Running",
+              Description: "Ringan dan nyaman untuk lari dan olahraga.",
+              Price: 450000
+            },
+            {
+              ID: 3,
+              Name: "Jam Tangan Classic",
+              Description: "Desain elegan, tahan air.",
+              Price: 850000
+            }
+          ];
+        }
+        renderProducts(products);
+      }
+
+      function renderProducts(list) {
+        totalCount.textContent = list.length;
+        if (!list.length) {
+          productsGrid.innerHTML = "";
+          emptyState.style.display = "block";
+          return;
+        }
+        emptyState.style.display = "none";
+        productsGrid.innerHTML = list
+          .map((p) => {
+            const id = p.ID ?? p.id ?? "";
+            return `
+            <article class="card" data-id="${id}" tabindex="0">
+              <div class="card-body">
+                <h3>${escapeHtml(p.Name)}</h3>
+                <div class="price">Rp ${formatPrice(p.Price)}</div>
+                <div class="desc">${escapeHtml(p.Description)}</div>
+              </div>
+              <div class="card-actions">
+                <button class="btn add-to-cart" data-id="${id}" title="Fungsi menyusul">Tambah ke Keranjang</button>
+                <button class="btn ghost" onclick="event.stopPropagation();location.href='/product/${id}'">Lihat</button>
+              </div>
+            </article>`;
+          })
+          .join("");
+
+        // make whole card clickable (navigate to product detail)
+        document.querySelectorAll(".card").forEach((card) => {
+          const id = card.dataset.id;
+          card.addEventListener("click", () => {
+            window.location.href = `/product/${id}`;
+          });
+          card.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") window.location.href = `/product/${id}`;
+          });
+        });
+
+        // Prevent 'Tambah ke Keranjang' from triggering card navigation (function not implemented yet)
+        document.querySelectorAll(".add-to-cart").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation(); /* no-op: implement cart later */
+          });
+        });
+      }
+
+      // Simple client-side search filter (instant, UI only)
+      searchInput.addEventListener("input", (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        Array.from(productsGrid.children).forEach((card) => {
+          const title =
+            card.querySelector("h3")?.textContent?.toLowerCase() || "";
+          const desc =
+            card.querySelector(".desc")?.textContent?.toLowerCase() || "";
+          card.style.display =
+            q === "" || title.includes(q) || desc.includes(q) ? "" : "none";
+        });
+      });
+
+      // init
+      loadProducts();
+    </script>
   </body>
 </html>

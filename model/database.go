@@ -21,7 +21,7 @@ func ConnectDatabase(){
 
 	database, err := gorm.Open(mysql.Open(connectionUrl))
 	if err != nil{
-		panic("Failed to connect to database!")
+		panic(err)
 	}
 
 	database.AutoMigrate(&User{}, &Product{}, &Order{}, &Cart{}, &CartItem{}, &Category{}, &Login{})

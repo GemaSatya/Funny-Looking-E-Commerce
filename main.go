@@ -33,6 +33,7 @@ func main(){
 	// Product Routes
 	mux.HandleFunc("/add-product", controller.AddProduct)	// Post Product
 	mux.HandleFunc("/product/{id}", controller.GetOneProduct)	// Get One Product
+	mux.HandleFunc("/product/delete/{id}", controller.DeleteProduct) // Delete Product
 	
 	fmt.Println("Server is running on port " + port)
 	if err := http.ListenAndServe(":"+port, mux); err != nil {

@@ -39,7 +39,7 @@ func AddProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	json.NewEncoder(w).Encode(map[string]any{
 		"message": "Product added successfully",
 		"product": product,
 	})
@@ -68,5 +68,37 @@ func GetOneProduct(w http.ResponseWriter, r *http.Request){
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(product)
+
+}
+
+func DeleteProduct(w http.ResponseWriter, r *http.Request){
+	// Implementation for deleting a product
+	if r.Method != http.MethodDelete{
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	strId := r.PathValue("id")
+	id, err := strconv.Atoi(strId)
+	if err != nil{
+		http.Error(w, "Invalid product ID", http.StatusBadRequest)
+		return
+	}
+
+	var product model.Product
+	if err := model.DB.First(&product, id).Error; err != nil{
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
+	}
+
+	if err := model.DB.Delete(&product).Error; err != nil{
+		http.Error(w, "Failed to delete product", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]any{
+		"message": "Product deleted successfully",
+	})
 
 }

@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ .Name }} — Toko Online</title>
+    <style>
+      :root {
+        --accent: #0ea5a4;
+        --muted: #6b7280;
+        --card-bg: #ffffff;
+        --glass: rgba(255, 255, 255, 0.6);
+      }
+      * {
+        box-sizing: border-box;
+        font-family:
+          Inter,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+      }
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+        color: #0f1724;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 28px;
+        background: transparent;
+      }
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+      }
+      .logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #06b6d4, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+      }
+      .brand h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+      main {
+        flex: 1;
+        padding: 40px 28px;
+        max-width: 800px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .product-detail {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 32px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      .product-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #0f1724;
+      }
+      .product-price {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .product-description {
+        color: var(--muted);
+        line-height: 1.6;
+        margin-bottom: 24px;
+      }
+      .product-id {
+        font-size: 0.875rem;
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+      .btn.primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn.primary:hover {
+        background: #0891b2;
+      }
+      .btn.secondary {
+        background: transparent;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+      }
+      .btn.secondary:hover {
+        background: var(--accent);
+        color: #fff;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .back-link:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 640px) {
+        main {
+          padding: 20px 16px;
+        }
+        .product-detail {
+          padding: 24px;
+        }
+        .product-title {
+          font-size: 1.5rem;
+        }
+        .actions {
+          flex-direction: column;
+        }
+        .btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="brand">
+        <div class="logo">TO</div>
+        <h1>Toko Online</h1>
+      </a>
+    </header>
+    <main>
+      <a href="/" class="back-link">← Kembali ke Beranda</a>
+      <div class="product-detail">
+        <h1 class="product-title">{{ .Name }}</h1>
+        <div class="product-price" id="product-price" data-price="{{ .Price }}">
+          Rp {{ .Price }}
+        </div>
+        <div class="product-description">{{ .Description }}</div>
+        <div class="product-id">ID Produk: {{ .ID }}</div>
+        <div class="actions">
+          <button
+            class="btn primary"
+            onclick="alert('Fungsi keranjang akan diimplementasikan')"
+          >
+            Tambah ke Keranjang
+          </button>
+          <button
+            class="btn secondary"
+            onclick="alert('Fungsi beli akan diimplementasikan')"
+          >
+            Beli Sekarang
+          </button>
+        </div>
+      </div>
+    </main>
+    <script>
+      function formatPrice(price) {
+        return new Intl.NumberFormat("id-ID").format(price);
+      }
+
+      // Format harga saat halaman dimuat
+      const priceEl = document.getElementById("product-price");
+      if (priceEl) {
+        const raw = priceEl.dataset.price;
+        priceEl.textContent = "Rp" + formatPrice(Number(raw));
+      }
+    </script>
+  </body>
+</html>

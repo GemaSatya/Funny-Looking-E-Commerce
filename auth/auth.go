@@ -1,6 +1,7 @@
 ﻿package auth
 
 import (
+	"html/template"
 	"net/http"
 	"time"
 
@@ -48,7 +49,28 @@ func RegisterUser(w http.ResponseWriter, r *http.Request){
 }
 
 func LoginUser(w http.ResponseWriter, r *http.Request){
-	// Implementation for user login
+	if r.Method == http.MethodGet {
+		// Serve login form
+		errorMsg := r.URL.Query().Get("error")
+		data := struct {
+			Error string
+		}{
+			Error: errorMsg,
+		}
+
+		t, err := template.ParseFiles("auth/login.html")
+		if err != nil {
+			http.Error(w, "Failed to load template", http.StatusInternalServerError)
+			return
+		}
+
+		if err := t.Execute(w, data); err != nil {
+			http.Error(w, "Failed to render template", http.StatusInternalServerError)
+			return
+		}
+		return
+	}
+
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -59,7 +81,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request){
 	password := r.FormValue("password")
 
 	if SearchUser(username){
-		http.Error(w, "User does not exist", http.StatusBadRequest)
+		http.Redirect(w, r, "/login?error=User+does+not+exist", http.StatusSeeOther)
 		return
 	}
 
@@ -67,17 +89,17 @@ func LoginUser(w http.ResponseWriter, r *http.Request){
 	var login model.Login
 
 	if err := model.DB.Where("username = ?", username).First(&user).Error; err != nil {
-		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		http.Redirect(w, r, "/login?error=Invalid+username+or+password", http.StatusSeeOther)
 		return
 	}
 
 	if !CheckPasswordHash(password, user.Password){
-		http.Error(w, "Wrong Credentials", http.StatusUnauthorized)
+		http.Redirect(w, r, "/login?error=Invalid+username+or+password", http.StatusSeeOther)
 		return
 	}
 
 	if !SearchToken(user.ID){
-		http.Error(w, "User already logged in", http.StatusConflict)
+		http.Redirect(w, r, "/login?error=User+already+logged+in", http.StatusSeeOther)
 		return
 	}
 
@@ -107,7 +129,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request){
 
 	err := model.DB.Create(&login).Error
 	if err != nil {
-		http.Error(w, "Error creating login session", http.StatusInternalServerError)
+		http.Redirect(w, r, "/login?error=Error+creating+login+session", http.StatusSeeOther)
 		return
 	}
+
+	// Redirect to home page on success
+	http.Redirect(w, r, "/frontend", http.StatusSeeOther)
 }

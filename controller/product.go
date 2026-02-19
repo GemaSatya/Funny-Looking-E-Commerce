@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"html/template"
 	"net/http"
 	"strconv"
 
@@ -66,8 +67,17 @@ func GetOneProduct(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(product)
+	// Parse template dan serve HTML dengan data produk
+	t, err := template.ParseFiles("frontend/product/product.html")
+	if err != nil {
+		http.Error(w, "Failed to load template", http.StatusInternalServerError)
+		return
+	}
+
+	if err := t.Execute(w, product); err != nil {
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
+		return
+	}
 
 }
 

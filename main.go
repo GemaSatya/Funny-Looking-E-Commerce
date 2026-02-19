@@ -23,8 +23,8 @@ func main(){
 
 	model.ConnectDatabase()
 
-	mux.HandleFunc("/", controller.HelloHandler)
-	mux.HandleFunc("/frontend", controller.LoadTemplate)
+	// mux.HandleFunc("/", controller.HelloHandler)
+	mux.HandleFunc("/", controller.LoadTemplate)
 
 	// Auth Routes
 	mux.HandleFunc("/register", auth.RegisterUser)	// Register User

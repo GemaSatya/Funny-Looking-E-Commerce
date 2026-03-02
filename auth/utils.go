@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"log"
+	"time"
 
 	"github.com/GemaSatya/E-Commerce/model"
 	"golang.org/x/crypto/bcrypt"
@@ -45,4 +46,14 @@ func GenerateToken(length int) string{
 	}
 
 	return base64.URLEncoding.EncodeToString(bytes)
+}
+
+func CleanUpToken(wait bool, sessionId uint){
+	if wait{
+		time.Sleep(40 * time.Second)
+	}
+
+	if err := model.DB.Where("session_id = ?", sessionId).Delete(&model.Login{}).Error; err != nil{
+		log.Fatal(err)
+	}
 }

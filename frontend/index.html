@@ -147,6 +147,33 @@
         color: var(--muted);
         border: 1px solid #e6edf3;
       }
+      /* user dropdown styling */
+      .user-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #fff;
+        border: 1px solid #e6edf3;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        min-width: 160px;
+        z-index: 1000;
+        display: none;
+      }
+      .dropdown-menu a {
+        display: block;
+        padding: 8px 12px;
+        color: #0f1724;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .dropdown-menu a:hover {
+        background: #f1f5f9;
+      }
       .add-to-cart {
         background: #111827;
       }
@@ -195,12 +222,16 @@
       <div style="display: flex; gap: 12px; align-items: center">
         <div id="authSection">
           {{if .IsLoggedIn}}
-          <button
-            class="btn ghost"
-            onclick="alert('Sistem user belum diimplementasikan')"
-          >
-            {{.Username}}
-          </button>
+          <div class="user-dropdown">
+            <button id="userBtn" class="btn ghost">{{.Username}}</button>
+            <div id="userMenu" class="dropdown-menu" aria-label="User menu">
+              <a href="/profile">Detail</a>
+              <a href="/orders">Pesanan Anda</a>
+              <a href="/favorites">Favorit</a>
+              <a href="/settings">Pengaturan</a>
+              <a href="#" id="logoutLink">Keluar</a>
+            </div>
+          </div>
           <button class="btn" onclick="window.location.href = '/add-product'">
             + Tambah Produk
           </button>
@@ -384,6 +415,35 @@
           card.style.display =
             q === "" || title.includes(q) || desc.includes(q) ? "" : "none";
         });
+      });
+
+      // toggle dropdown when username is clicked
+      function toggleUserMenu() {
+        const menu = document.getElementById('userMenu');
+        if (!menu) return;
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      }
+
+      // hide menu when clicking outside
+      document.addEventListener('click', (e) => {
+        const btn = document.getElementById('userBtn');
+        const menu = document.getElementById('userMenu');
+        if (!btn || !menu) return;
+        if (btn.contains(e.target)) {
+          toggleUserMenu();
+        } else if (!menu.contains(e.target)) {
+          menu.style.display = 'none';
+        }
+      });
+
+      // logout handler
+      document.getElementById('logoutLink')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          await fetch('/logout', { method: 'POST' });
+        } finally {
+          window.location.href = '/login';
+        }
       });
 
       // init

@@ -1,7 +1,9 @@
 ﻿package auth
 
 import (
+	"encoding/json"
 	"html/template"
+	"log"
 	"net/http"
 	"time"
 
@@ -135,4 +137,50 @@ func LoginUser(w http.ResponseWriter, r *http.Request){
 
 	// Redirect to home page on success
 	http.Redirect(w, r, "/frontend", http.StatusSeeOther)
+}
+
+func LogoutUser(w http.ResponseWriter, r *http.Request){
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var session model.Login
+
+	st, err := r.Cookie("session_token")
+	if err != nil{
+		http.Error(w, "Session token not found", http.StatusUnauthorized)
+		return
+	}
+
+	if err := model.DB.Where("session_token = ?", st.Value).First(&session).Error; err != nil {
+		http.Error(w, "Invalid session token", http.StatusUnauthorized)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:   "session_token",
+		Value:  "",
+		Expires: time.Now().Add(-time.Hour),
+		HttpOnly: true,
+	})
+
+	http.SetCookie(w, &http.Cookie{
+		Name:   "csrf_token",
+		Value:  "",
+		Expires: time.Now().Add(-time.Hour),
+		HttpOnly: false,
+	})
+
+	CleanUpToken(false, session.SessionId)
+
+	if err := json.NewEncoder(w).Encode(map[string]any{
+		"msg": "Logout successful",
+	});err != nil{
+		http.Error(w, "Error encoding response", http.StatusInternalServerError)
+		return
+	}
+
+	log.Println("Log out successful")
+
 }

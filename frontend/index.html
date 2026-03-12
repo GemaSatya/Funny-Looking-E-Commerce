@@ -239,10 +239,7 @@
           <button class="btn ghost"><a href="/login">Masuk</a></button>
           {{end}}
         </div>
-        <button
-          class="btn"
-          onclick="alert('Fungsi keranjang belum diimplementasikan')"
-        >
+        <button class="btn" onclick="window.location.href = '/cart'">
           Keranjang
         </button>
       </div>
@@ -388,10 +385,37 @@
           });
         });
 
-        // Prevent 'Tambah ke Keranjang' from triggering card navigation (function not implemented yet)
+        // Tambah ke Keranjang: call API; redirect to login if not authenticated
         document.querySelectorAll(".add-to-cart").forEach((btn) => {
-          btn.addEventListener("click", (e) => {
-            e.stopPropagation(); /* no-op: implement cart later */
+          btn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            const productId = parseInt(btn.dataset.id, 10);
+            if (!productId) return;
+            btn.disabled = true;
+            const original = btn.textContent;
+            btn.textContent = "...";
+            try {
+              const res = await fetch("/cart/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ product_id: productId }),
+              });
+              if (res.status === 401) {
+                window.location.href = "/login";
+                return;
+              }
+              if (!res.ok) {
+                alert("Gagal menambahkan ke keranjang.");
+              } else {
+                btn.textContent = "Ditambahkan!";
+                setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1500);
+                return;
+              }
+            } catch (err) {
+              alert("Terjadi kesalahan. Silakan coba lagi.");
+            }
+            btn.textContent = original;
+            btn.disabled = false;
           });
         });
       }

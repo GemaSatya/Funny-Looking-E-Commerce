@@ -32,10 +32,15 @@ func main(){
 	mux.HandleFunc("/logout", auth.LogoutUser)		// Logout User
 
 	// Product Routes
-	mux.HandleFunc("/add-product", controller.AddProduct)	// Post Product
-	mux.HandleFunc("/product/{id}", controller.GetOneProduct)	// Get One Product
-	mux.HandleFunc("/product/delete/{id}", controller.DeleteProduct) // Delete Product
-	
+	mux.HandleFunc("/add-product", controller.AddProduct)			// Post Product
+	mux.HandleFunc("/product/{id}", controller.GetOneProduct)		// Get One Product
+	mux.HandleFunc("/product/delete/{id}", controller.DeleteProduct)	// Delete Product
+
+	// Cart Routes
+	mux.HandleFunc("/cart", controller.ViewCart)				// View Cart
+	mux.HandleFunc("/cart/add", controller.AddToCart)			// Add Item to Cart
+	mux.HandleFunc("/cart/item/{id}", controller.RemoveFromCart)		// Remove Item from Cart
+
 	fmt.Println("Server is running on port " + port)
 	if err := http.ListenAndServe(":"+port, mux); err != nil {
 		fmt.Println("Server failed to start:", err)

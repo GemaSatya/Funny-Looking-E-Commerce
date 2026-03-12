@@ -174,7 +174,8 @@
         <div class="actions">
           <button
             class="btn primary"
-            onclick="alert('Fungsi keranjang akan diimplementasikan')"
+            id="addToCartBtn"
+            data-product-id="{{ .ID }}"
           >
             Tambah ke Keranjang
           </button>
@@ -197,6 +198,41 @@
       if (priceEl) {
         const raw = priceEl.dataset.price;
         priceEl.textContent = "Rp" + formatPrice(Number(raw));
+      }
+
+      const addBtn = document.getElementById("addToCartBtn");
+      if (addBtn) {
+        addBtn.addEventListener("click", async () => {
+          const productId = parseInt(addBtn.dataset.productId, 10);
+          addBtn.disabled = true;
+          const original = addBtn.textContent;
+          addBtn.textContent = "...";
+          try {
+            const res = await fetch("/cart/add", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ product_id: productId }),
+            });
+            if (res.status === 401) {
+              window.location.href = "/login";
+              return;
+            }
+            if (!res.ok) {
+              alert("Gagal menambahkan ke keranjang.");
+            } else {
+              addBtn.textContent = "Ditambahkan!";
+              setTimeout(() => {
+                addBtn.textContent = original;
+                addBtn.disabled = false;
+              }, 1500);
+              return;
+            }
+          } catch (err) {
+            alert("Terjadi kesalahan. Silakan coba lagi.");
+          }
+          addBtn.textContent = original;
+          addBtn.disabled = false;
+        });
       }
     </script>
   </body>
